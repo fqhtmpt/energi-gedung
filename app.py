@@ -69,7 +69,6 @@ st.markdown("""
         }
     </style>
     <div class="header">
-        <img src="stm-600x321.jpg" style="height:80px; margin-bottom:10px;" alt="Logo STM">
         <div class="company">PT. Serasi Tunggal Mandiri</div>
         <div class="location">Wisma Indocement</div>
         <h1 style="margin-top:10px;">🔌 Aplikasi Analisis & Prediksi Konsumsi Energi Gedung</h1>

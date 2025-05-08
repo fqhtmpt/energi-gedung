@@ -1,0 +1,13 @@
+/* style.css */
+h1 {
+    color: #008B8B;
+    text-align: center;
+    font-size: 2.5em;
+}
+
+footer {
+    text-align: center;
+    color: gray;
+    font-size: 14px;
+    margin-top: 50px;
+}

@@ -77,7 +77,7 @@ st.markdown("""
 
 st.title("⚡ Analisis Konsumsi Energi Gedung (LWBP & WBP)")
 
-uploaded_file = st.file_uploader("📂 Upload file Excel (Januari - Maret)", type=["xlsx"])
+uploaded_file = st.file_uploader("📂 Upload file Excel", type=["xlsx"])
 
 def parse_excel(file):
     xls = pd.ExcelFile(file)

@@ -196,8 +196,7 @@ st.markdown("""
     <div style='text-align: center; color: gray; font-size: 14px;'>
         📍 Wisma Indocement, Jl. Jend. Sudirman Kav. 70-71, Jakarta Selatan 12910<br>
         🔧 Aplikasi dibuat saat magang di PT. Serasi Tunggal Mandiri<br>
+        © Copyright by Muhammad Fiqih Tampati<br>
         © 2025 All rights reserved.<br>
-        © Copyright by Muhammad Fiqih Tampati
-        © 2025 All rights reserved.
     </div>
 """, unsafe_allow_html=True)

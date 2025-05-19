@@ -6,6 +6,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 import numpy as np
 
+from fpdf import FPDF
+from docx import Document
+
 st.set_page_config(page_title="Analisis Energi Gedung", layout="wide")
 
 # Load CSS eksternal
@@ -146,7 +149,6 @@ if uploaded_file:
     st.pyplot(fig)
     st.caption("🔴 Titik merah = LWBP > 10.000 kWh | 🟠 Titik oranye = WBP > 1.000 kWh")
 
-    # === Machine Learning Prediksi Irit/Boros ===
     df_filtered['Label'] = np.where((df_filtered['LWBP'] > 10000) | (df_filtered['WBP'] > 1000), 1, 0)
     X = df_filtered[['LWBP', 'WBP']]
     y = df_filtered['Label']
@@ -157,7 +159,6 @@ if uploaded_file:
 
     y_pred = clf.predict(X_test)
 
-    # === Tampilkan hasil klasifikasi dengan format tabel yang rapi ===
     report_dict = classification_report(y_test, y_pred, target_names=["Irit", "Boros"], output_dict=True)
     report_df = pd.DataFrame(report_dict).transpose().round(2).reset_index()
     report_df.rename(columns={"index": "Label"}, inplace=True)
@@ -174,7 +175,6 @@ if uploaded_file:
     st.subheader("📊 Data dengan Hasil Prediksi")
     st.dataframe(df_filtered[['Tanggal', 'LWBP', 'WBP', 'Prediksi Label']])
 
-    # === Visualisasi Prediksi ===
     st.subheader("📉 Grafik Prediksi Irit vs Boros")
     fig2, ax2 = plt.subplots(figsize=(14, 5))
     ax2.plot(df_filtered['Tanggal'], df_filtered['Prediksi'], marker='o', linestyle='-', color='#4caf50')
@@ -187,6 +187,45 @@ if uploaded_file:
     plt.xticks(rotation=45)
     plt.tight_layout()
     st.pyplot(fig2)
+
+    # === FITUR EXPORT PDF / WORD ===
+    hasil_analisis = {
+        "Panel Dipilih": selected_panel,
+        "Total LWBP": f"{total_lwbp:,.2f} kWh",
+        "Total WBP": f"{total_wbp:,.2f} kWh",
+        "Hari dengan LWBP Tinggi": df_filtered[df_filtered['LWBP Tinggi']]['Tanggal'].dt.strftime('%Y-%m-%d').tolist(),
+        "Hari dengan WBP Tinggi": df_filtered[df_filtered['WBP Tinggi']]['Tanggal'].dt.strftime('%Y-%m-%d').tolist()
+    }
+
+    export_format = st.selectbox("📤 Export laporan analisis", ["PDF", "Word"])
+    if st.button("Export Sekarang"):
+        if export_format == "PDF":
+            pdf = FPDF()
+            pdf.add_page()
+            pdf.set_font("Arial", size=12)
+            pdf.cell(200, 10, txt="Laporan Konsumsi Energi", ln=True, align="C")
+            pdf.ln(10)
+            for key, value in hasil_analisis.items():
+                if isinstance(value, list):
+                    pdf.multi_cell(0, 10, f"{key}:\n- " + "\n- ".join(value))
+                else:
+                    pdf.cell(200, 10, txt=f"{key}: {value}", ln=True)
+            pdf.output("laporan_konsumsi_energi.pdf")
+            with open("laporan_konsumsi_energi.pdf", "rb") as f:
+                st.download_button("📄 Download PDF", f, file_name="laporan_energi.pdf")
+        else:
+            doc = Document()
+            doc.add_heading("Laporan Konsumsi Energi", 0)
+            for key, value in hasil_analisis.items():
+                if isinstance(value, list):
+                    doc.add_paragraph(f"{key}:")
+                    for v in value:
+                        doc.add_paragraph(f"- {v}", style='ListBullet')
+                else:
+                    doc.add_paragraph(f"{key}: {value}")
+            doc.save("laporan_konsumsi_energi.docx")
+            with open("laporan_konsumsi_energi.docx", "rb") as f:
+                st.download_button("📝 Download Word", f, file_name="laporan_energi.docx")
 
 else:
     st.info("Silakan upload file Excel dulu buat mulai analisis.")

@@ -16,7 +16,7 @@ Aplikasi berbasis **Streamlit** buat analisis konsumsi energi dari data Excel. C
 
 ## 🚀 Cara Pakai Aplikasi
 
-1. **Clone repo ini** ke komputer lu:
+1. **Clone repo ini** ke komputer kamu:
    ```bash
    git clone https://github.com/fqhtmpt/energi-gedung.git
    cd energi-gedung
